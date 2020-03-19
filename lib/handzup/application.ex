@@ -9,7 +9,8 @@ defmodule Handzup.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      HandzupWeb.Endpoint
+      HandzupWeb.Endpoint,
+      HandzupWeb.Presence
       # Starts a worker by calling: Handzup.Worker.start_link(arg)
       # {Handzup.Worker, arg},
     ]
