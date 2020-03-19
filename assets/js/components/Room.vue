@@ -14,39 +14,52 @@
     import socket from "../socket"
     import {Presence} from "phoenix"
 
-    let channel = null;
-    let presence = null;
+    let name = "Charles_" + Math.floor(Math.random() * 10);
+
     export default {
-        data: () => {
+        data() {
             return {
-                connectedUsers: []
+                connectedUsers: [],
+                channel: null
+            }
+        },
+        watch: {
+            $route(to, from) {
+                this.joinChannel(this.$route.params.id)
             }
         },
         mounted() {
-            channel = socket.channel("room:" + this.$route.params.id, {name: "Charles_" + Math.floor(Math.random() * 10)})
-            presence = new Presence(channel)
-
-            channel.join()
-                .receive("ok", resp => { console.log("Joined successfully", resp) })
-                .receive("error", resp => { console.log("Unable to join", resp) })
-
-            channel.on("hand_raised", payload => {
-                console.log(payload)
-            })
-
-            presence.onSync(() => {
-                this.connectedUsers = []
-
-                presence.list((id, {metas: [user, ...rest]}) => {
-                    this.connectedUsers.push(user.name)
-                })
-            })
-
+            this.joinChannel(this.$route.params.id)
         },
         methods: {
-            raiseHand: () => {
-                channel.push("raise_hand")
+            raiseHand() {
+                this.channel.push("raise_hand")
             },
+            joinChannel(channelName) {
+                if(this.channel) {
+                    this.channel.leave()
+                }
+
+                this.channel = socket.channel("room:" + this.$route.params.id, {name: name})
+
+                let presence = new Presence(this.channel)
+
+                presence.onSync(() => {
+                    this.connectedUsers = []
+
+                    presence.list((id, {metas: [user, ...rest]}) => {
+                        this.connectedUsers.push(user.name)
+                    })
+                })
+
+                this.channel.on("hand_raised", payload => {
+                    console.log(payload)
+                })
+
+                this.channel.join()
+                    .receive("ok", resp => { console.log("Joined successfully", resp) })
+                    .receive("error", resp => { console.log("Unable to join", resp) })
+            }
 
         }
     }
