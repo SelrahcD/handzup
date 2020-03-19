@@ -2,7 +2,7 @@ defmodule HandzupWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", HandzupWeb.RoomChannel
+   channel "room:*", HandzupWeb.RoomChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
