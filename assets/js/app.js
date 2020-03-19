@@ -17,10 +17,13 @@ import "phoenix_html"
 import socket from "./socket"
 import VueRouter from "vue-router";
 import Vue from "vue";
+
 import Home from './components/Home.vue'
+import Room from './components/Room.vue'
 
 const routes = [
     { path: '/', name: 'home', component: Home },
+    { path: '/:id', name: 'room', component: Room },
 ]
 
 const router = new VueRouter({
