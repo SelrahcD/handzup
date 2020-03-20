@@ -18,7 +18,10 @@ defmodule Handzup.Rooms.Room do
   end
 
   def handle_cast({:raise_hand, username}, raised_hands) do
-    {:noreply, raised_hands ++ [username]}
+
+    raised_hands = unless Enum.member?(raised_hands, username), do: raised_hands ++ [username], else: raised_hands
+
+    {:noreply, raised_hands}
   end
 
   def handle_call(:get_raised_hands, _from, raised_hands) do
