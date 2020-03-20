@@ -10,7 +10,9 @@ defmodule Handzup.Application do
     children = [
       # Start the endpoint when the application starts
       HandzupWeb.Endpoint,
-      HandzupWeb.Presence
+      HandzupWeb.Presence,
+      {Registry, keys: :unique, name: Registry.Rooms},
+      Handzup.Rooms.RoomsSupervisor
       # Starts a worker by calling: Handzup.Worker.start_link(arg)
       # {Handzup.Worker, arg},
     ]

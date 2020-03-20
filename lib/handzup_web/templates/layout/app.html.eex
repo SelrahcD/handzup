@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <%= csrf_meta_tag() %>
   </head>
-  <body class="container p-4 mx-auto mt-6">
-    <header>
-     <h1>Handzup !</h1>
+  <body class="container-fluid bg-blue-100">
+    <header class="border-b text-center p-4 mb-4 bg-white">
+     <h1 class="text-2xl font-light tracking-wide">Handzup !</h1>
     </header>
     <main role="main" id="app">
 		<router-view></router-view>
