@@ -1,5 +1,6 @@
 defmodule Handzup.Rooms.Room do
   use GenServer, restart: :temporary
+  @lifetime 60 * 60 * 1000;
 
   def start_link(room_name) do
     GenServer.start_link(__MODULE__, [], name: via_tuple(room_name))
@@ -25,18 +26,22 @@ defmodule Handzup.Rooms.Room do
 
     raised_hands = unless Enum.member?(raised_hands, username), do: raised_hands ++ [username], else: raised_hands
 
-    {:noreply, raised_hands}
+    {:noreply, raised_hands, @lifetime}
   end
 
   def handle_cast({:lower_hand, username}, raised_hands) do
 
     raised_hands = List.delete(raised_hands, username)
 
-    {:noreply, raised_hands}
+    {:noreply, raised_hands, @lifetime}
   end
 
   def handle_call(:get_raised_hands, _from, raised_hands) do
-    {:reply, raised_hands, raised_hands}
+    {:reply, raised_hands, raised_hands, @lifetime}
+  end
+
+  def handle_info(:timeout, _) do
+    {:stop, :normal, []}
   end
 
   defp via_tuple(room_name) do
