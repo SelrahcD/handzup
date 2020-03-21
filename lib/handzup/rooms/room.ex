@@ -9,6 +9,10 @@ defmodule Handzup.Rooms.Room do
     GenServer.cast(via_tuple(room_name), {:raise_hand, username})
   end
 
+  def lower_hand(room_name, username) do
+    GenServer.cast(via_tuple(room_name), {:lower_hand, username})
+  end
+
   def get_raised_hands(room_name) do
     GenServer.call(via_tuple(room_name), :get_raised_hands)
   end
@@ -20,6 +24,13 @@ defmodule Handzup.Rooms.Room do
   def handle_cast({:raise_hand, username}, raised_hands) do
 
     raised_hands = unless Enum.member?(raised_hands, username), do: raised_hands ++ [username], else: raised_hands
+
+    {:noreply, raised_hands}
+  end
+
+  def handle_cast({:lower_hand, username}, raised_hands) do
+
+    raised_hands = List.delete(raised_hands, username)
 
     {:noreply, raised_hands}
   end

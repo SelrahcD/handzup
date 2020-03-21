@@ -22,6 +22,14 @@ defmodule HandzupWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("lower_hand", _params, socket) do
+    Handzup.Rooms.Room.lower_hand(socket.topic, socket.assigns.user)
+
+    broadcast!(socket, "waiting_list_updated", %{list: Handzup.Rooms.Room.get_raised_hands(socket.topic)})
+
+    {:noreply, socket}
+  end
+
   def handle_info(:after_join, socket) do
     push(socket, "presence_state", Presence.list(socket))
     push(socket, "waiting_list_updated", %{list: Handzup.Rooms.Room.get_raised_hands(socket.topic)})
